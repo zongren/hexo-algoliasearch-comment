@@ -7,7 +7,22 @@ var algoliaConfig = hexo.config.algolia_comment;
 var fields = algoliaConfig.fields;
 var log = hexo.log;
 var comments = [];
+var marked = require('marked');
+var assign = require('object-assign');
 
+var markedOptions = assign({
+  gfm: true,
+  pedantic: false,
+  sanitize: false,
+  tables: true,
+  breaks: true,
+  smartLists: true,
+  smartypants: true,
+  modifyAnchors: '',
+  autolink: true
+}, hexo.config.marked);
+
+marked.setOptions(markedOptions);
 /**
  * Process data of a comment
  * @param {Object} comment A comment of Hexo
@@ -15,9 +30,10 @@ var comments = [];
  */
 function processComment(comment) {
   var object = _.pick(comment, fields);
-
-  // define objectID for Algolia
-  object.message = hexoUtil.stripHTML(object.message);
+  if(typeof comment.replyTarget != "undefined" && comment.replyTarget.length > 0){
+      comment.message = "@" + comment.replyTarget + "&nbsp;&nbsp;&nbsp;&nbsp;" + comment.message;
+  }
+  object.message = marked(comment.message);
   object.objectID = comment._id;
   return object;
 }
@@ -45,14 +61,15 @@ function indexComments(index, comments) {
 
 processor.register('_data/*path', function static_processor(data) {
   var comment = JSON.parse(data.readSync());
-  comment = processComment(comment);
-  if(typeof comment.objectID != "undefined" && comment.objectID.length > 0){
-    comments.push(comment);
+  var object = processComment(comment);
+  if(typeof object.objectID != "undefined" && object.objectID.length > 0){
+    comments.push(object);
   }
 });
 
-hexo.on('generateAfter', function(post){
+hexo.on('generateBefore', function(post){
   log.info("Start indexing comments.Comments length is "+comments.length);
+  console.log(comments);
   // init index
   var client = algoliasearch(algoliaConfig.appId, algoliaConfig.adminApiKey);
   var index = client.initIndex(algoliaConfig.indexName);
