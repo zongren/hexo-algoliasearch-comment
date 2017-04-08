@@ -1,0 +1,31 @@
+{
+  "name": "hexo-algoliasearch-comment",
+  "version": "0.0.5",
+  "description": "\u0016A plugin to index comments of your Hexo blog on Algolia",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zongren/hexo-algoliasearch-comment.git"
+  },
+  "keywords": [
+    "hexo",
+    "comment",
+    "algolia",
+    "search"
+  ],
+  "author": "zongren",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zongren/hexo-algoliasearch-comment/issues"
+  },
+  "homepage": "https://github.com/zongren/hexo-algoliasearch-comment#readme",
+  "dependencies": {
+    "algoliasearch": "^3.16.0",
+    "async": "^2.0.0-rc.6",
+    "hexo-util": "^0.6.0",
+    "lodash": "^4.13.1"
+  }
+}
