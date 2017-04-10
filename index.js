@@ -3,8 +3,11 @@ var _ = require('lodash');
 var hexoUtil = require('hexo-util');
 var algoliasearch = require('algoliasearch');
 var async = require('async');
-var algoliaConfig = hexo.config.algolia_comment;
+var algoliaConfig = assign({
+  enable: true
+}, hexo.config.algolia_comment);
 var fields = algoliaConfig.fields;
+var enable = algoliaConfig.enable;
 var log = hexo.log;
 var comments = [];
 var marked = require('marked');
@@ -58,27 +61,28 @@ function indexComments(index, comments) {
     log.info('Indexation done. ' + comments.length + ' comments indexed.');
   });
 }
-
-processor.register('_data/*path', function static_processor(data) {
-  var comment = JSON.parse(data.readSync());
-  var object = processComment(comment);
-  if(typeof object.objectID != "undefined" && object.objectID.length > 0){
-    comments.push(object);
-  }
-});
-
-hexo.on('generateBefore', function(post){
-  log.info("Start indexing comments.Comments length is "+comments.length);
-  // init index
-  var client = algoliasearch(algoliaConfig.appId, algoliaConfig.adminApiKey);
-  var index = client.initIndex(algoliaConfig.indexName);
-  
-  index.clearIndex(function(err) {
-    if (err) {
-      log.info('Error has occurred during clearing index : ' + err);
-      return err;
+if(enable){
+  processor.register('_data/*path', function static_processor(data) {
+    var comment = JSON.parse(data.readSync());
+    var object = processComment(comment);
+    if(typeof object.objectID != "undefined" && object.objectID.length > 0){
+      comments.push(object);
     }
-    log.info('Index cleared');
-    indexComments(index, comments);
   });
-});
+
+  hexo.on('generateBefore', function(post){
+    log.info("Start indexing comments.Comments length is "+comments.length);
+    // init index
+    var client = algoliasearch(algoliaConfig.appId, algoliaConfig.adminApiKey);
+    var index = client.initIndex(algoliaConfig.indexName);
+    
+    index.clearIndex(function(err) {
+      if (err) {
+        log.info('Error has occurred during clearing index : ' + err);
+        return err;
+      }
+      log.info('Index cleared');
+      indexComments(index, comments);
+    });
+  });
+}
