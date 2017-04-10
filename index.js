@@ -69,7 +69,6 @@ processor.register('_data/*path', function static_processor(data) {
 
 hexo.on('generateBefore', function(post){
   log.info("Start indexing comments.Comments length is "+comments.length);
-  console.log(comments);
   // init index
   var client = algoliasearch(algoliaConfig.appId, algoliaConfig.adminApiKey);
   var index = client.initIndex(algoliaConfig.indexName);
