@@ -1,6 +1,6 @@
 {
   "name": "hexo-algoliasearch-comment",
-  "version": "0.0.23",
+  "version": "0.1.0",
   "description": "\u0016A plugin to index comments of your Hexo blog on Algolia",
   "main": "index.js",
   "scripts": {
@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/zongren/hexo-algoliasearch-comment#readme",
   "dependencies": {
-    "algoliasearch": "^3.16.0",
-    "async": "^2.0.0-rc.6",
-    "hexo-util": "^0.6.0",
+    "algoliasearch": "^4.19.1",
+    "async": "^3.2.4",
+    "hexo-fs": "^4.1.1",
     "lodash": "^4.13.1",
-    "marked": "^0.3.5",
+    "marked": "^5.1.2",
     "object-assign": "^4.1.0"
   }
 }
