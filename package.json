@@ -1,6 +1,6 @@
 {
   "name": "hexo-algoliasearch-comment",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "\u0016A plugin to index comments of your Hexo blog on Algolia",
   "main": "index.js",
   "scripts": {
